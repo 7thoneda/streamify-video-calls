@@ -1,5 +1,10 @@
 import express from "express";
 import "dotenv/config";
+import dotenv from "dotenv";
+dotenv.config();
+
+console.log("DEBUG check: MONGO_URI =", process.env.MONGO_URI);
+
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import path from "path";
