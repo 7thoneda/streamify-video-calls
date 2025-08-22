@@ -2,19 +2,24 @@
   "name": "streamify",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
+    "dev": "npm run dev --prefix backend",
     "build": "npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend",
     "start": "npm run start --prefix backend"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "Streamify full-stack app",
   "dependencies": {
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
-    "dotenv": "^17.2.1",
-    "express": "^5.1.0",
+    "dotenv": "^16.5.0",
+    "express": "^4.21.0",
     "mongoose": "^8.17.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
   }
 }
