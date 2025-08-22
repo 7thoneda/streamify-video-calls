@@ -49,6 +49,8 @@ if (process.env.NODE_ENV === "production") {
 }
 
 // Connect to DB first, then start server
+console.log("Loaded MONGO_URI:", process.env.MONGO_URI);
+
 connectDB()
   .then(() => {
     app.listen(PORT, () => {
