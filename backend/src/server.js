@@ -1,7 +1,5 @@
 import express from "express";
 import "dotenv/config";
-console.log("ENV MONGO_URI:", process.env.MONGO_URI);
-console.log("ENV STREAM_API_KEY:", process.env.STREAM_API_KEY);
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import path from "path";
@@ -9,54 +7,55 @@ import path from "path";
 import authRoutes from "./routes/auth.route.js";
 import userRoutes from "./routes/user.route.js";
 import chatRoutes from "./routes/chat.route.js";
-
 import { connectDB } from "./lib/db.js";
 
 const app = express();
 const PORT = process.env.PORT || 5001;
-
 const __dirname = path.resolve();
 
-// CORS
+// Debug: print loaded environment variables (only keys, not secrets)
+console.log("✅ Loaded environment variables:");
+console.log("MONGO_URI:", process.env.MONGO_URI ? "set" : "missing");
+console.log("STREAM_API_KEY:", process.env.STREAM_API_KEY ? "set" : "missing");
+
+// --- Middleware ---
 app.use(
   cors({
     origin: "http://localhost:5173",
     credentials: true,
   })
 );
-
-// Middleware
 app.use(express.json());
 app.use(cookieParser());
 
-// Root route for testing
+// --- Routes ---
 app.get("/", (req, res) => {
   res.send("Server is running ✅");
 });
 
-// API routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/chat", chatRoutes);
 
-// Production static files
+// --- Serve frontend in production ---
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../frontend/dist")));
-
   app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
   });
 }
 
-// Connect to DB first, then start server
-console.log("Loaded MONGO_URI:", process.env.MONGO_URI);
-
-connectDB()
-  .then(() => {
+// --- Connect DB + Start Server ---
+const startServer = async () => {
+  try {
+    await connectDB();
     app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
+      console.log(`🚀 Server running at http://localhost:${PORT}`);
     });
-  })
-  .catch((err) => {
-    console.error("Failed to connect to MongoDB:", err);
-  });
+  } catch (err) {
+    console.error("❌ Failed to start server:", err.message);
+    process.exit(1);
+  }
+};
+
+startServer();
