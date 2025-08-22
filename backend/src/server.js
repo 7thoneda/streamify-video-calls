@@ -1,5 +1,7 @@
 import express from "express";
 import "dotenv/config";
+console.log("ENV MONGO_URI:", process.env.MONGO_URI);
+console.log("ENV STREAM_API_KEY:", process.env.STREAM_API_KEY);
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import path from "path";
